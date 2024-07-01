@@ -1,0 +1,16 @@
+                   STRUK PEMBAYARAN ALFAMART
+                       AL-UNPAK BOGOR
+
+                 Tanggal dan Waktu Pembayaran
+                   Mon May 27 13:18:03 2024
+
+             -----------------------------------
+Harga Satuan : Lifebouy sabun mandi cair
+harga        : 28900
+jumlah       : 3
+total        : 86700
+=============================
+total bayar = Rp.4299515
+=============================
+             -----------------------------------
+                            Terima Kasih
