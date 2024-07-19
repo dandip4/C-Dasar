@@ -25,8 +25,8 @@ int main() {
         } else if (rumus == "lingkaran") {
             cout << "Masukan jari-jari: ";
             cin >> r;
-            luas = M_PI * r * r;
-            keliling = 2 * M_PI * r;
+            luas = 3.14 * r * r;
+            keliling = 2 * 3.14 * r;
         } else {
             cout << "Pilihan tidak ada" << endl;
             continue; 

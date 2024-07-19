@@ -13,8 +13,8 @@ void exchangeSort(int arr[], int n) {
     }
 }
 void Hasil(int arr[], int n) {
-    for (int i = 0; i < n; ++i) {   // exchange sort, hampi sama dengan bubbles sort. hanya saja ada elemen menjadi pusat untuk menajadi tempat pertukaran
-        cout << arr[i] << " ";      // Danadipa Nugraha Kelas G 065123199    
+    for (int i = 0; i < n; ++i) {   // exchange sort,
+        cout << arr[i] << " ";        
     }
     cout << endl;
 }

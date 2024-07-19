@@ -16,7 +16,7 @@ int main(){
      cin >> mahasiswa; 
      cout << "Masukan NPM             : ";
      cin >> npm;
-     cout << "Masukan Program Studi   : ";                          //Danadipa Nugraha 065123199 Kelas G
+     cout << "Masukan Program Studi   : ";                          
      cin >> prodi;
      cout << "Masukan Kelas           : ";
      cin >> kelas;

@@ -1,3 +1,0 @@
-Asep,111,Matematika
-Dinar,112,Algoritma
-Endang,113,Komputer
