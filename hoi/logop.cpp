@@ -1,164 +1,87 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <ctime>
-#include <queue>
-#include <stack>
-
 using namespace std;
 
-// Struktur Mahasiswa
-struct Mahasiswa {
+struct Node
+{
     string nama;
-    string npm;
-    vector<string> matakuliah;
-    vector<pair<string, time_t>> tugas; // Pair of task and submission time
-    vector<pair<string, time_t>> absen; // Pair of attendance and attendance time
+    Node *next;
 };
 
-// Struktur Dosen
-struct Dosen {
-    string nama;
-    string nidn;
-    vector<string> matakuliah;
-    vector<pair<string, time_t>> tugas; // Pair of task and deadline
-    vector<pair<string, time_t>> absen; // Pair of attendance and deadline
-};
-
-// Struktur Admin
-struct Admin {
-    string username;
-    string password;
-};
-
-// Linked list node untuk mahasiswa
-struct MahasiswaNode {
-    Mahasiswa mahasiswa;
-    MahasiswaNode* next;
-};
-
-// Linked list node untuk dosen
-struct DosenNode {
-    Dosen dosen;
-    DosenNode* next;
-};
-
-// Fungsi-fungsi
-void addMahasiswa(MahasiswaNode*& head, Mahasiswa m) {
-    MahasiswaNode* newNode = new MahasiswaNode{m, nullptr};
-    if (!head) {
-        head = newNode;
-    } else {
-        MahasiswaNode* temp = head;
-        while (temp->next) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-    }
-}
-
-void addDosen(DosenNode*& head, Dosen d) {
-    DosenNode* newNode = new DosenNode{d, nullptr};
-    if (!head) {
-        head = newNode;
-    } else {
-        DosenNode* temp = head;
-        while (temp->next) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-    }
-}
-
-void printMahasiswa(MahasiswaNode* head) {
-    while (head) {
-        cout << "Nama: " << head->mahasiswa.nama << ", NPM: " << head->mahasiswa.npm << endl;
+void print(Node *head)
+{
+    while (head != NULL)
+    {
+        cout << head->nama << "->";
         head = head->next;
     }
+
+    cout << endl
+         << endl;
 }
+int main()
+{
+    cout << " >>> CONTOH LINKED LIST <<<" << endl
+         << endl;
+    Node *node1 = NULL;
+    Node *node2 = NULL;
+    Node *node3 = NULL;
 
-void printDosen(DosenNode* head) {
-    while (head) {
-        cout << "Nama: " << head->dosen.nama << ", NIDN: " << head->dosen.nidn << endl;
-        head = head->next;
-    }
-}
+    // Membuat 3 node
+    node1 = new Node();
+    node2 = new Node();
+    node3 = new Node();
 
-void tambahTugasDosen(DosenNode* dosenHead, string nidn, string tugas, time_t deadline) {
-    while (dosenHead) {
-        if (dosenHead->dosen.nidn == nidn) {
-            dosenHead->dosen.tugas.push_back({tugas, deadline});
-            break;
-        }
-        dosenHead = dosenHead->next;
-    }
-}
+    // Menginputkan nilai ke dalam node
+    node1->nama = "Ucup";
+    node2->nama = "Jae";
+    node3->nama = "Irpan";
 
-void tambahAbsenDosen(DosenNode* dosenHead, string nidn, string absen, time_t deadline) {
-    while (dosenHead) {
-        if (dosenHead->dosen.nidn == nidn) {
-            dosenHead->dosen.absen.push_back({absen, deadline});
-            break;
-        }
-        dosenHead = dosenHead->next;
-    }
-}
+    // Sambungkan node-node
+    node1->next = node2;
+    node2->next = node3;
+    node3->next = NULL;
 
-void daftarTugasMahasiswa(MahasiswaNode* mhsHead, string npm) {
-    while (mhsHead) {
-        if (mhsHead->mahasiswa.npm == npm) {
-            cout << "Tugas Mahasiswa " << mhsHead->mahasiswa.nama << ":" << endl;
-            for (const auto& tugas : mhsHead->mahasiswa.tugas) {
-                cout << "Tugas: " << tugas.first << ", Waktu Pengumpulan: " << ctime(&tugas.second);
-            }
-            break;
-        }
-        mhsHead = mhsHead->next;
-    }
-}
+    // --- menampilkan linked list awal
+    cout << "Linked List Awal" << endl;
+    print(node1);
 
-void daftarAbsenMahasiswa(MahasiswaNode* mhsHead, string npm) {
-    while (mhsHead) {
-        if (mhsHead->mahasiswa.npm == npm) {
-            cout << "Absen Mahasiswa " << mhsHead->mahasiswa.nama << ":" << endl;
-            for (const auto& absen : mhsHead->mahasiswa.absen) {
-                cout << "Absen: " << absen.first << ", Waktu: " << ctime(&absen.second);
-            }
-            break;
-        }
-        mhsHead = mhsHead->next;
-    }
-}
+    // --- menambahkan elemen pada akhir linked list
+    Node *node4 = new Node();
+    node4->nama = "Hakim";
+    node3->next = node4;
+    cout << "Menambahkan elemen pada akhir linked list" << endl;
+    print(node1);
 
-// Fungsi utama
-int main() {
-    Admin admin = {"admin", "admin"};
-    MahasiswaNode* mahasiswaHead = nullptr;
-    DosenNode* dosenHead = nullptr;
+    // --- menambahkan elemen pada awal linked list
+    Node *node0 = new Node();
+    node0->nama = "Bambang";
+    node0->next = node1;
+    cout << "Menambahkan elemen pada awal linked list" << endl;
+    print(node0);
 
-    Mahasiswa m1 = {"Alice", "123"};
-    Mahasiswa m2 = {"Bob", "456"};
-    addMahasiswa(mahasiswaHead, m1);
-    addMahasiswa(mahasiswaHead, m2);
+    // --- menambahkan elemen setelah elemen kedua pada linked list
+    Node *node12 = new Node();
+    node12->nama = "Pamungkas";
+    node1->next = node12;
+    node12->next = node2;
+    cout << "Menambahkan elemen pada awal linked list" << endl;
+    print(node0);
 
-    Dosen d1 = {"Dr. Smith", "001"};
-    Dosen d2 = {"Dr. John", "002"};
-    addDosen(dosenHead, d1);
-    addDosen(dosenHead, d2);
+    // -- mengambil elemen ke-i pada linked list
+    cout << "Mengambil elemen ke-2 pada linked list" << endl;
+    string nilai_dicari;
+    Node *
+        nodeDicari = node0;
+    for (int i = 0; i < 1; i++)
+    {
+        nodeDicari = nodeDicari->next;
+    };
+    cout << nodeDicari->nama << endl
+         << endl;
 
-    // Menambahkan tugas ke dosen
-    time_t now = time(0);
-    tambahTugasDosen(dosenHead, "001", "Tugas 1", now + 7 * 24 * 60 * 60); // deadline 1 minggu
-    tambahAbsenDosen(dosenHead, "002", "Absen 1", now + 3 * 24 * 60 * 60); // deadline 3 hari
-
-    // Menampilkan daftar mahasiswa dan dosen
-    printMahasiswa(mahasiswaHead);
-    printDosen(dosenHead);
-
-    // Daftar tugas dan absen mahasiswa
-    daftarTugasMahasiswa(mahasiswaHead, "123");
-    daftarAbsenMahasiswa(mahasiswaHead, "456");
-
+    // --- menghapus elemen pada akhir linked list
+    node3->next = NULL;
+    cout << "Menghapus elemen pada akhir linked list" << endl;
+    print(node0);
     return 0;
 }
-    

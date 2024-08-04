@@ -12,9 +12,9 @@ int main ()
 	p = &angka[2];        *p = 30;
 	p = angka;            *p = 40;
 	
-	fot(int i = 0; i < 5; i++){
+	for(int i = 0; i < 5; i++){
 
-    cout << angka[i] << ",";
+    cout << angka[i] << ",";
 
 }
 }

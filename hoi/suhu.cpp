@@ -1,18 +1,32 @@
-#include<iostream>
+#include <iostream>
+#include <fstream>
+#include <string>
+
 using namespace std;
 
-int main(){
-    double celsius;
+int main() {  
+    cout << ">>> Menulis ke File" << endl;  
+    ofstream file_keluaran;  
+    file_keluaran.open("asa.txt");  
 
-    cout << "Masukan Suhu Celcius: ";
-    cin >> celsius;
+    cout << "sedang menulis..." << endl;  
+    file_keluaran << "Haloo " << endl;  
+    file_keluaran << "INI ADALAH SAYAaaaaaaaaaaa " << endl;  
+    file_keluaran << "KRISNA" << endl;  
+    file_keluaran << "KRISNA" << endl;  
+    file_keluaran.close();  
 
-    double kelvin = celsius + 273;
-    double reamur = celsius * 4/5;
-    double fahrenheit = celsius * 9/5+32;
 
-    cout << "kelvin       : " << kelvin << endl;
-    cout << "Reamur       : " << reamur << endl;
-    cout << "Fahrenheit   : " << fahrenheit << endl;
+    cout << "membaca dari file" << endl;
+    string line;  
+    ifstream file_input;  
+    file_input.open("asa.txt");  
 
-}
+    cout << "membaca isi file latihan.txt" << endl;
+    while (file_input) {  
+
+        getline(file_input, line);
+        cout << line << endl;  
+    }  
+    file_input.close();  
+}  

@@ -1,307 +1,341 @@
 #include <iostream>
-#include <vector>
-#include <ctime>
-#include <iomanip>
-#include <algorithm>
-#include <unordered_map>
-
 using namespace std;
 
-class Pegawai;
-
-class CatatanKehadiran {
-public:
-    Pegawai* pegawai;
-    time_t waktuAbsen;  
-    string jenisKehadiran;
-
-    CatatanKehadiran(Pegawai* pegawai, time_t absensi, const string& jenis)
-        : pegawai(pegawai), waktuAbsen(absensi), jenisKehadiran(jenis) {}
-};
-    
-class Pegawai {
-public:
-    string username;
-    string password;
-    string nama;
-    bool Role;
-    bool sudahLogin;
-
-    Pegawai(const string& uname, const string& pwd, const string& namaPegawai, bool admin )
-        : username(uname), password(pwd), nama(namaPegawai), Role(admin), sudahLogin(false) {}
-
+// node
+struct Node
+{
+    char label;
+    Node *left, *right, *parent;
 };
 
-class SistemKehadiran {
-private:
-    vector<Pegawai> daftarPegawai;
-    vector<CatatanKehadiran> catatanKehadiran;
-    Pegawai* penggunaSaatIni;
-    unordered_map<string, time_t> waktuKehadiranTerakhir;
+// variabel pointer global
+Node *root, *newNode;
 
-public:
-    SistemKehadiran() : penggunaSaatIni(nullptr) {
-        daftarPegawai.emplace_back("admin", "123", "Admin", true);
+// Membuat Tree Baru
+void createNewTree(char label)
+{
+
+    if (root != NULL)
+        cout << "\nTree sudah dibuat" << endl;
+    else
+    {
+        root = new Node();
+        root->label = label;
+        root->left = NULL;
+        root->right = NULL;
+        root->parent = NULL;
+        cout << "\nNode " << label << " berhasil dibuat menjadi root." << endl;
     }
+}
 
-    void jalankan() {
-        int pilihan;
-        do {
-            cout << "\nMenu:\n";
-            cout << "1. login\n";
-            cout << "0. Keluar\n";
-            cout << "Pilih: ";
-            cin >> pilihan;
-
-            switch (pilihan) {
-                case 1:
-                    login();
-                    break;
-                case 0:
-                    cout << "Keluar dari program.\n";
-                    break;
-                default:
-                    cout << "Pilihan tidak valid.\n";
-            }
-        } while (pilihan != 0);
+// insert Left
+Node *insertLeft(char label, Node *node)
+{
+    if (root == NULL)
+    {
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+        return NULL;
     }
-
-private:
-    void login() {  
-        string username, password;
-        cout << "Masukkan username: ";
-        cin >> username;
-        cout << "Masukkan password: ";
-        cin >> password;
-
-        auto it = find_if(daftarPegawai.begin(), daftarPegawai.end(),
-            [&](const Pegawai& pegawai) { return pegawai.username == username && pegawai.password == password; });
-
-        if (it != daftarPegawai.end()) {
-            penggunaSaatIni = &(*it);
-            penggunaSaatIni->sudahLogin = true;
-
-            if (penggunaSaatIni->Role) {
-                menuAdmin();
-            } else {
-                menuPegawai();
-            }
-        } else {
-            cout << "Login gagal, user tidak ditemukan atau Username/password salah.\n";
+    else
+    {
+        // cek apakah anak kiri ada atau tidak
+        if (node->left != NULL)
+        {
+            // kalau ada
+            cout << "\nNode " << node->label << " sudah ada anak kiri!!" << endl;
+            return NULL;
+        }
+        else
+        {
+            // kalau tidak ada
+            newNode = new Node();
+            newNode->label = label;
+            newNode->left = NULL;
+            newNode->right = NULL;
+            newNode->parent = node;
+            node->left = newNode;
+            cout << "\nNode " << label << " berhasil ditambahkan ke anak kiri " << newNode->parent->label << endl;
+            return newNode;
         }
     }
+}
 
-    void keluar() {
-        if (penggunaSaatIni != nullptr) {
-            cout << "Logout berhasil. Sampai jumpa, " << penggunaSaatIni->nama << "!\n";
-            penggunaSaatIni->sudahLogin = false;
-            penggunaSaatIni = nullptr;
-        } else {
-            cout << "Anda belum login.\n";
+// insert right
+Node *insertRight(char label, Node *node)
+{
+    if (root == NULL)
+    {
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+        return NULL;
+    }
+    else
+    {
+        // cek apakah anak kiri ada atau tidak
+        if (node->right != NULL)
+        {
+            // kalau ada
+            cout << "\nNode " << node->label << " sudah ada anak kanan!!" << endl;
+            return NULL;
+        }
+        else
+        {
+            // kalau tidak ada
+            newNode = new Node();
+            newNode->label = label;
+            newNode->left = NULL;
+            newNode->right = NULL;
+            newNode->parent = node;
+            node->right = newNode;
+            cout << "\nNode" << label << " berhasil ditambahkan ke anak kanan " << newNode->parent->label << endl;
+            return newNode;
         }
     }
+}
 
-    void menuPegawai() {
-        int pilihan;
-        do {
-            cout << "\n Login berhasil. Selamat datang, "<< penggunaSaatIni->nama<<"\n";
-            cout << "Absen Pegawai:\n";
-            cout << "1. Hadir\n";
-            cout << "2. Izin\n";
-            cout << "3. Sakit\n";
-            cout << "4. Bolos\n";
-            cout << "5. Logout\n";
-            cout << "Pilih: ";
-            cin >> pilihan;
+// Empty
+bool empty()
+{
+    if (root == NULL)
+        return true;
+    else
+        return false;
+}
 
-            switch (pilihan) {
-                case 1:
-                    tandaiKehadiran("Hadir");
-                    break;
-                case 2:
-                    tandaiKehadiran("Izin");
-                    break;
-                case 3:
-                    tandaiKehadiran("Sakit");
-                    break;
-                case 4:
-                    tandaiKehadiran("Bolos");
-                    break;
-                case 5:
-                    keluar();
-                    break;
-                default:
-                    cout << "Pilihan tidak valid.\n";
-            }
-        } while (pilihan != 5);
+// update
+void update(char label, Node *node)
+{
+    if (!root)
+    {
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
     }
-
-    void menuAdmin() {
-        int pilihan;
-        do {
-            cout << "\nMenu Admin:\n";
-            cout << "1. Tambah Pegawai\n";
-            cout << "2. Edit Pegawai\n";
-            cout << "3. Hapus Pegawai\n";
-            cout << "4. Daftar Pegawai\n";
-            cout << "5. Laporan Kehadiran\n";
-            cout << "6. Logout\n";
-            cout << "Pilih: ";
-            cin >> pilihan;
-
-            switch (pilihan) {
-                case 1:
-                    tambahPegawai();
-                    break;
-                case 2:
-                    editPegawai();
-                    break;
-                case 3:
-                    hapusPegawai();
-                    break;
-                case 4:
-                    tampilkanDaftarPegawai();
-                    break;
-                case 5:
-                    tampilkanLaporanKehadiran();
-                    break;
-                case 6:
-                    keluar();
-                    break;
-                default:
-                    cout << "Pilihan tidak valid.\n";
-            }
-        } while (pilihan != 6);
-    }
-
-    void tambahPegawai() {
-        if (penggunaSaatIni->Role) {
-            string username, password, nama;
-            cout << "Masukkan username pegawai baru: ";
-            cin >> username;
-            cout << "Masukkan password pegawai baru: ";
-            cin >> password;
-            cout << "Masukkan nama pegawai baru: ";
-            cin >> nama;
-
-            daftarPegawai.emplace_back(username, password, nama, false);
-            cout << "Pegawai baru berhasil ditambahkan.\n";
-        } else {
-            cout << "Anda tidak memiliki izin untuk menambah pegawai.\n";
+    else
+    {
+        if (!node)
+            cout << "\nNode yang ingin diganti tidak ada!!" << endl;
+        else
+        {
+            char temp = node->label;
+            node->label = label;
+            cout << "\nLabel node " << temp << " berhasil diubah menjadi " << label << endl;
         }
     }
+}
 
-    void editPegawai() {
-        if (penggunaSaatIni->Role) {
-            string username;
-            cout << "Masukkan username pegawai yang akan diedit: ";
-            cin >> username;
+// Tranversal
+// preOrder
+void preOrder(Node *node = root)
+{
 
-            auto it = find_if(daftarPegawai.begin(), daftarPegawai.end(),
-                [&](const Pegawai& pegawai) { return pegawai.username == username; });
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
 
-            if (it != daftarPegawai.end()) {
-                cout << "Informasi Pegawai Sebelum Diedit:\n";
-                cout << "Username: " << it->username << "\n";
-                cout << "Nama: " << it->nama << "\n";
-                cout << "Role: " << (it->Role ? "Admin" : "Pegawai") << "\n";
-
-                string namaBaru, usernameBaru, passwordBaru;
-                cout << "Masukkan nama baru: ";
-                cin >> namaBaru;
-                cout << "Masukkan username baru: ";
-                cin >> usernameBaru;
-                cout << "Masukkan password baru: ";
-                cin >> passwordBaru;
-              
-                it->nama = namaBaru;
-                it->username = usernameBaru;
-                it->password = passwordBaru;
-
-                cout << "\nInformasi Pegawai Setelah Diedit:\n";
-                cout << "Username: " << it->username << "\n"; 
-                cout << "Nama: " << it->nama << "\n";
-                cout << "Role: " << (it->Role ? "Admin" : "Pegawai") << "\n";
-
-                cout << "Pegawai berhasil diedit.\n";
-            } else {
-                cout << "Pegawai dengan username " << username << " tidak ditemukan.\n";
-            }
-        } 
-    }
-
-    void hapusPegawai() {
-        if (penggunaSaatIni->Role) {
-            string username;
-            cout << "Masukkan username pegawai yang akan dihapus: ";
-            cin >> username;
-
-            auto it = find_if(daftarPegawai.begin(), daftarPegawai.end(),
-                [&](const Pegawai& pegawai) { return pegawai.username == username; });
-
-            if (it != daftarPegawai.end()) {
-                daftarPegawai.erase(it);
-                cout << "Pegawai berhasil dihapus.\n";
-            } else {
-                cout << "Pegawai dengan username " << username << " tidak ditemukan.\n";
-            }
-        } 
-    }
-
-    void tampilkanDaftarPegawai() const {
-        if (penggunaSaatIni->Role) {
-            cout << "Daftar Pegawai:\n";
-            for (const auto& pegawai : daftarPegawai) {
-                cout << "- " << pegawai.nama << " (Role: " << (pegawai.Role ? "Admin" : "Pegawai") << ")\n";
-            }
-        } else {
-            cout << "Anda tidak memiliki izin untuk melihat daftar pegawai.\n";
+        if (node != NULL)
+        {
+            cout << node->label << ", ";
+            preOrder(node->left);
+            preOrder(node->right);
         }
     }
+}
 
-    void tandaiKehadiran(const string& jenisKehadiran) {
-        if (!penggunaSaatIni->Role) {
-            auto waktuKehadiranTerakhirIt = waktuKehadiranTerakhir.find(penggunaSaatIni->username);
-            if (waktuKehadiranTerakhirIt == waktuKehadiranTerakhir.end() ||
-                difftime(time(nullptr), waktuKehadiranTerakhirIt->second) >= 24 * 60 * 60) {
-                cout << "Selamat Anda sudah absen, silahkan logout\n";
-                catatanKehadiran.emplace_back(penggunaSaatIni, time(nullptr), jenisKehadiran);
-                waktuKehadiranTerakhir[penggunaSaatIni->username] = time(nullptr);
-            } else {
-                cout << "Anda sudah melakukan kehadiran dalam 24 jam terakhir.\n";
-            }
-        } else {
-            cout << "Anda tidak memiliki izin untuk kehadiran.\n";
+// inOrder
+void inOrder(Node *node = root)
+{
+
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
+
+        if (node != NULL)
+        {
+            inOrder(node->left);
+            cout << node->label << ", ";
+            inOrder(node->right);
         }
     }
+}
 
-    void tampilkanLaporanKehadiran() const {
-        if (penggunaSaatIni->Role) {
-            cout << "Laporan Kehadiran:\n";
-            cout << setw(20) << "Nama Pegawai" << setw(25) << "Waktu Kehadiran" << setw(15) << "Keterangan\n";
+// postOrder
+void postOrder(Node *node = root)
+{
 
-            for (const auto& catatan : catatanKehadiran) {
-                cout << setw(20) << catatan.pegawai->nama
-                    << setw(25) << formatWaktu(catatan.waktuAbsen)  
-                    << setw(15) << catatan.jenisKehadiran << "\n";
-            }
-        } else {
-            cout << "Anda tidak memiliki izin untuk melihat laporan kehadiran.\n";
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
+
+        if (node != NULL)
+        {
+            postOrder(node->left);
+            postOrder(node->right);
+            cout << node->label << ", ";
         }
     }
+}
 
-    string formatWaktu(time_t timestamp) const {
-        tm* waktuLokal = localtime(&timestamp);
-        char buffer[25];
-        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", waktuLokal);
-        return buffer;
+// deleteTree
+void deleteTree(Node *node)
+{
+
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
+
+        if (node != NULL)
+        {
+            if (node != root)
+            {
+                node->parent->left = NULL;
+                node->parent->right = NULL;
+            }
+            deleteTree(node->left);
+            deleteTree(node->right);
+
+            if (node == root)
+            {
+                delete root;
+                root = NULL;
+            }
+            else
+            {
+                delete node;
+            }
+        }
     }
-    
-};
+}
 
-int main() {
-    SistemKehadiran sistemKehadiran;
-    sistemKehadiran.jalankan();
+// delete Subtree
+void deleteSub(Node *node)
+{
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
+        deleteTree(node->left);
+        deleteTree(node->right);
+        cout << "\nSubtree node " << node->label << " berhasil dihapus." << endl;
+    }
+}
 
-    return 0;
+// clear
+void clear()
+{
+    if (!root)
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+    else
+    {
+        deleteTree(root);
+        cout << "\nTree berhasil dihapus." << endl;
+    }
+}
+
+// size
+int size(Node *node = root)
+{
+    if (!root)
+    {
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+        return 0;
+    }
+    else
+    {
+
+        if (!node)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1 + size(node->left) + size(node->right);
+        }
+    }
+}
+
+// Menghitung height dari Tree
+int height(Node *node = root)
+{
+    if (!root)
+    {
+        cout << "\nBuat tree terlebih dahulu!!" << endl;
+        return 0;
+    }
+    else
+    {
+        if (!node)
+        {
+            return 0;
+        }
+        else
+        {
+            int heightKiri = height(node->left);
+            int heightKanan = height(node->right);
+
+            if (heightKiri >= heightKanan)
+            {
+                return heightKiri + 1;
+            }
+            else
+            {
+                return heightKanan + 1;
+            }
+        }
+    }
+}
+
+// characteristic
+void charateristic()
+{
+    cout << "\nSize Tree : " << size() << endl;
+    cout << "Height Tree : " << height() << endl;
+    cout << "Average Node of Tree : " << size() / height() << endl;
+}
+
+int main()
+{
+
+    createNewTree('A');
+
+    Node *nodeB, *nodeC, *nodeD, *nodeE, *nodeF, *nodeG, *nodeH, *nodeI, *nodeJ;
+
+    nodeB = insertLeft('B', root); // input node kearah kiri
+    nodeC = insertRight('C', root);
+    nodeD = insertLeft('D', nodeB);
+    nodeE = insertRight('E', nodeB); // input node kearah kanan
+    nodeF = insertLeft('F', nodeC);
+    nodeG = insertLeft('G', nodeE);
+    nodeH = insertRight('H', nodeE);
+    nodeI = insertLeft('I', nodeG);
+    nodeJ = insertRight('J', nodeG);
+
+    cout << "Tree empty? : " << empty() << endl;
+
+    update('Z', nodeC);
+    update('C', nodeC);
+
+    cout << "\nPreOrder :" << endl;
+    preOrder(nodeE);
+    cout << "\n"
+         << endl;
+    cout << "InOrder :" << endl;
+    inOrder(nodeE);
+    cout << "\n"
+         << endl;
+    cout << "PostOrder :" << endl;
+    postOrder(nodeE);
+    cout << "\n"
+         << endl;
+
+    charateristic();
+
+    deleteSub(nodeE);
+    cout << "\nPreOrder :" << endl;
+    preOrder();
+    cout << "\n"
+         << endl;
+
+    charateristic();
 }

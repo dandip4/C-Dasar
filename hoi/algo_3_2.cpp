@@ -1,43 +1,33 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-int main(){
-    string nama, ttl, gender, prodi; int nohp; int npm; float tb; char kelas; bool mahasiswa;
+int main() {
+    const int n = 5; // Ukuran array
+    int arr[n] = {64, 25, 12, 22, 11};
 
-     cout << "Masukan Nama            : ";
-     getline(cin, nama);
-     cout << "Masukan Tempat dan Tanggal Lahir dengan format(17 Agustus 2005, Bogor): ";
-     getline(cin, ttl);
-     cout << "Masukan Jenis Kelamin (Laki-laki/Perempuan) : ";
-     getline (cin, gender); 
-     cout << "Masukan tinggi badan(cm): ";
-     cin >> tb; 
-     cout << "Status Mahasiswa : (Masukan 1 untuk Mahasiswa Aktif, dan 0 untuk Mahasiswa Tidak aktif): ";
-     cin >> mahasiswa; 
-     cout << "Masukan NPM             : ";
-     cin >> npm;
-     cout << "Masukan Program Studi   : ";                          
-     cin >> prodi;
-     cout << "Masukan Kelas           : ";
-     cin >> kelas;
-     cout << "Masukan Nomor HP        : ";
-     cin >> nohp;
-cout <<endl;
-cout <<endl;
-cout <<endl;
-     cout << "BIODATA DIRI"<< endl
-          << "Nama                     : "<< nama << endl
-          << "Tempat dan Tanggal Lahir : "<< ttl << endl
-          << "Jenis Kelamin            : "<< gender << endl
-          << "Tinggi Badan             : "<< tb << endl
-          << "Status Mahasiswa         : "<< (mahasiswa ? "Mahasiswa Aktif" : "Mahasiswa Tidak Aktif") << endl
-          << "NPM                      : "<< npm<< endl
-          << "Program Studi            : "<< prodi<< endl
-          << "Kelas                    : "<< kelas << endl
-          << "Nomor HP                 : "<< nohp<< endl;  
+    // Selection Sort
+    for (int i = 0; i < n - 1; i++) {
+        // Temukan elemen terkecil dari bagian yang belum diurutkan
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        // Tukar elemen terkecil dengan elemen pertama dari bagian yang belum diurutkan
+        if (minIndex != i) {
+            int temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+    }
 
+    // Cetak array yang telah diurutkan
+    cout << "Array setelah diurutkan: ";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
 
-     return 0;
-
-
+    return 0;
 }
